@@ -1,0 +1,19 @@
+{
+	"info": {
+		"_postman_id": "a4d96433-590a-432b-8472-9df5bdc519bf",
+		"name": "Kafka Logger",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "9360005"
+	},
+	"item": [
+		{
+			"name": "sendMessage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/kafka/sendMessage"
+			},
+			"response": []
+		}
+	]
+}
