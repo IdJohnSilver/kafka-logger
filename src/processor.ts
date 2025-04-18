@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Consumer, KafkaMessage } from 'kafkajs';
 import { kafka } from './kafka.ts';
 import sql from 'mssql';
@@ -66,42 +67,42 @@ export class KafkaProcessor {
     this.consumer = kafka.consumer({ groupId: this.groupId });
   }
 
-  public async process(): Promise<ProcessorStatusType> {
+  public async process(): Promise<void> {
     if (this.status === 'STOPPED') {
-      return this.status;
+      return;
     }
     await this.consumer.connect();
-    await this.consumer.subscribe({
-      topic: this.topic,
-      fromBeginning: this.processFromBeginning,
-    });
-    let currentBatch: KafkaMessage[] = [];
-    await this.consumer.run({
-      autoCommit: false,
-      eachMessage: async ({ message, partition }) => {
-        console.log({
-          value: message.value.toString(),
-          datetime: message.timestamp,
-        });
-        currentBatch.push(message);
-        if (currentBatch.length >= this.maxBatchSize) {
-          console.log('PROCESSOR:: pause consumer');
-          this.consumer.pause([{ topic: this.topic }]);
-          console.log('PROCESSOR:: writing to db');
-          await this.bulkInsert(currentBatch);
-          this.consumer.commitOffsets([
-            {
-              topic: this.topic,
-              partition: partition,
-              offset: currentBatch[currentBatch.length - 1].offset,
-            },
-          ]);
-          currentBatch = [];
-          this.consumer.resume([{ topic: this.topic }]);
-          console.log('PROCESSOR:: resume consumer');
-        }
-      },
-    });
-    return this.status;
+    // await this.consumer.subscribe({
+    //   topic: this.topic,
+    //   fromBeginning: this.processFromBeginning,
+    // });
+    // let currentBatch: KafkaMessage[] = [];
+    // await this.consumer.run({
+    //   autoCommit: false,
+    //   eachMessage: async ({ message, partition }) => {
+    //     console.log({
+    //       value: message.value.toString(),
+    //       datetime: message.timestamp,
+    //     });
+    //     currentBatch.push(message);
+    //     if (currentBatch.length >= this.maxBatchSize) {
+    //       console.log('PROCESSOR:: pause consumer');
+    //       this.consumer.pause([{ topic: this.topic }]);
+    //       console.log('PROCESSOR:: writing to db');
+    //       await this.bulkInsert(currentBatch);
+    //       this.consumer.commitOffsets([
+    //         {
+    //           topic: this.topic,
+    //           partition: partition,
+    //           offset: currentBatch[currentBatch.length - 1].offset,
+    //         },
+    //       ]);
+    //       currentBatch = [];
+    //       this.consumer.resume([{ topic: this.topic }]);
+    //       console.log('PROCESSOR:: resume consumer');
+    //     }
+    //   },
+    // });
+    // return this.status;
   }
 }

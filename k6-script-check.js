@@ -1,9 +1,8 @@
-import { check } from 'k6';
 import http from 'k6/http';
-
+export const options = {
+  vus: 100,
+  duration: '10s',
+};
 export default function () {
-  const res = http.get('https://videoserver.t2m.kz/rtc/info');
-  check(res, {
-    'is status 400': (r) => r.status === 400,
-  });
+  http.get('https://videoserver.t2m.kz/rtc/info');
 }

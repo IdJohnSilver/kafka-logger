@@ -9,11 +9,15 @@ export const sendMessageController = async (req, res) => {
   });
 
   await producer.connect();
-  await producer.send({
-    topic: TOPIC_ID,
-    messages: [{ value: 'Hello KafkaJS user!' }],
-  });
+
+  for (let i = 0; i < 5; i++) {
+    await producer.send({
+      topic: TOPIC_ID,
+      messages: [{ value: `Hello KafkaJS user! Message ${i + 1}` }],
+    });
+    console.log(`Message ${i + 1} sent`);
+  }
 
   await producer.disconnect();
-  res.send('OK');
+  res.send('Messages sent successfully');
 };

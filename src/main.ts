@@ -17,7 +17,7 @@ const app = express();
 const jsonParser = bodyParser.json();
 
 export const GROUP_ID: string = 'consumer_group_1';
-export const TOPIC_ID: string = 'topic_1';
+export const TOPIC_ID: string = 'my-topic';
 
 const PROCESS_BATCH_SIZE = 1000;
 const sqlService = new SQL();
